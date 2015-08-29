@@ -3,6 +3,7 @@ using System.Collections;
 
 public class JumperController : MonoBehaviour {
 
+	[SerializeField] private ItemManager m_IM = default(ItemManager);
 	[SerializeField] private bool m_cheatEnable = false;
 	[SerializeField] private Rigidbody m_rb = default(Rigidbody);
 	[SerializeField] private float m_MAX_JUMP_HEIGHT = 125f;
@@ -17,17 +18,23 @@ public class JumperController : MonoBehaviour {
 		canJump = true;
 	}
 
+	public void RestartGame(){
+		Application.LoadLevel(0);
+	}
+	public void StartGame(){
+		m_IM.InitGame();		
+	}
+
 	void Update () {
 
-		if(Input.GetKeyDown(KeyCode.R)){
-			Application.LoadLevel(0);
-		}
+	
 
 		if (Input.GetKeyDown (KeyCode.Space) && canJump) {
 			Debug.Log("Jump");
 			canJump = false;
 			m_MAX_JUMP = transform.localPosition;
 			m_MAX_JUMP.y += m_MAX_JUMP_HEIGHT;
+			m_rb.velocity = Vector3.zero;
 			Jump();
 		}
 
@@ -59,17 +66,17 @@ public class JumperController : MonoBehaviour {
 	}
 
 	private void JumpAdd(){
-		m_rb.AddForce (transform.up * m_JumpPower * 2, ForceMode.Acceleration);
+		m_rb.AddForce (transform.up * m_JumpPower * 2f, ForceMode.Acceleration);
 	}
 
 	public void GotJumpItem(){
 		canJump = true;
 	}
 
-	
-	void OnCollisionEnter(Collision col){
+
+	void OnTriggerEnter(Collider col){
 		Debug.Log (col.collider.gameObject.name);
-		if (col.collider.gameObject.name.Contains ("Platform")) {
+		if (col.collider.gameObject.name.Contains ("item0")) {
 			GotJumpItem();		
 		}
 	}
