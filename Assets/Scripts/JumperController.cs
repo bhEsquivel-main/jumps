@@ -37,6 +37,20 @@ public class JumperController : MonoBehaviour {
 			}
 		}
 
+		if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) {
+			Debug.Log("Jump");
+			canJump = false;
+			m_MAX_JUMP = transform.localPosition;
+			m_MAX_JUMP.y += m_MAX_JUMP_HEIGHT;
+			Jump();
+		}
+		if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Stationary) {
+			if(transform.localPosition.y <= m_MAX_JUMP.y){
+				JumpAdd();
+			}
+		}
+
+
 
 	}
 
